@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block menu_items %}
+    <a class="nav-item nav-link active" href="/"><span class="sr-only">Home</span></a>
+    {% if session.status|string() == "active"|string() %}
+        <a class="nav-item nav-link" href="/about">About</a>
+        <a class="nav-item nav-link g_id_signout" href="/logout">Logout</a>
+    {% else %} 
+        <a class="nav-item nav-link" href="/about">About</a>
+        <a class="nav-item nav-link" href="/login">Log In</a>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <h1>the brown bag site</h1>
+    <p><em>for all your group planning needs.</em></p>
+    {% if session.status|string() == "active"|string() %}
+        <p>This is shown when logged in.</p>
+        <p>Welcome {{ session.user_lname }}, {{ session.user_fname }}</p>
+        <p>You are user {{ session.user_id }}.</p>
+        <!-- <p><a href="/text">Import By Text</a></p>
+        <p><a href="/link">Import By Link</a></p>
+        <p><a href="/info">Attribution & Info</a></p> -->
+        
+    {% else %}         
+        <div id="g_id_onload"
+            data-client_id="837769679296-345ubi3bvuj7ke13v6belk9psemnl2r0.apps.googleusercontent.com"
+            data-context="signin"
+            data-ux_mode="redirect"
+            data-auto_select="true"
+            data-login_uri="http://localhost:5000/callback">
+        </div>
+        
+        <div class="g_signin_button_container">
+            <div class="g_id_signin" 
+                data-type="standard"
+                data-shape="rectangular"
+                data-theme="outline"
+                data-text="signin_with"
+                data-size="large"
+                data-logo_alignment="left">
+            </div>
+        </div>
+        
+
+        <br>
+        <p>This is shown when not logged in.</p>
+        
+        <br>
+
+        <!-- <p>Import By Text</p>
+        <p>Import By Link</p>
+        <p><a href="/info">Attribution & Info</a></p>
+        <br>
+        <br> -->
+    {% endif %}
+    
+    
+
+{% endblock %}

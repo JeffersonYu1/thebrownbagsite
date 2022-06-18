@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="shortcut icon" href="/static/favicon.ico">
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="/static/jquery-3.5.1.slim.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+    <script src="/static/scripts.js"></script>
+        
+    {% block customScripts %}{% endblock %}
+
+    <title>{% block title %}{% endblock %} | tbbs</title>
+</head>
+
+<body onload="">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand tbbs-blue" href="/">the brown bag site</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                {% block menu_items %}{% endblock %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- {% if get_flashed_messages() %}
+    <header>
+        <div class="alert alert-primary border text-center" role="alert">
+            {{ get_flashed_messages() | join(" ") }}
+        </div>
+    </header>
+    {% endif %} -->
+
+    <main class="container p-5">
+        {% block main %}{% endblock %}
+    </main>
+
+    <footer class="small text-center text-muted">
+        Made by <a href="https://jeffersonyu1.github.io/" target="_blank">Fu-Yao (Jefferson) Yu</a>.
+        <br> Buy me a boba! <a href="https://www.paypal.com/donate?business=W8XQ2L48JH4PC&no_recurring=0&currency_code=USD" target="_blank">PayPal</a> | <a href="https://venmo.com/JeffersonYu1" target="_blank">Venmo</a> | <a href="https://cash.app/JeffersonYu1"
+            target="_blank">CashApp</a>
+        <br>
+        <br>
+    </footer>
+
+</body>
+
+</html>

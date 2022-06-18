@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block menu_items %}
+    <a class="nav-item nav-link" href="/">Home</a>
+    {% if session.status|string() == "active"|string() %}
+        <a class="nav-item nav-link" href="/about">About</a>
+        <a class="nav-item nav-link g_id_signout" href="/logout" >Logout</a>
+    {% else %} 
+        <a class="nav-item nav-link" href="/about">About</a>
+        <a class="nav-item nav-link" href="/login">Log In</a>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <h1>Error {{ code }}</h1>
+    <p>Error Message: {{ msg }}</p>
+    <br>
+
+{% endblock %}
