@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, width=device-width">
 
+    <!-- <link rel="stylesheet" href="/static/bootstrap.min_lux.css"> -->
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link rel="stylesheet" href="/static/style.css">
     <link rel="shortcut icon" href="/static/favicon.ico">
@@ -39,10 +40,11 @@
                 {% if messages %}
                     {% for category, message in messages %}
                         {% if category == 'message' %}
-                        <div class="alert alert-warning" role="alert">
+                        <div class="alert alert-dismissible alert-warning" role="alert">
                         {% else %}
-                        <div class="alert alert-{{ category }}" role="alert">
+                        <div class="alert alert-dismissible alert-{{ category }}" role="alert">
                         {% endif %}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         {{ message }}
                         </div>
                     {% endfor %}

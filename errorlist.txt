@@ -1,3 +1,5 @@
 6/24 - Error 400 - invalid token returned when using the login button. May be because token expired?
-    - After using one-tap, the error was temporarily fixed.
+    - After using one-tap, the error was temporarily fixed once, but persisted after logouts.
+    - FIXED: Clock skew. https://github.com/googleapis/google-api-python-client/issues/1648
+
 

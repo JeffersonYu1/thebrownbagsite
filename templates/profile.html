@@ -132,7 +132,9 @@
                                     <textarea style="width:100%" class="form-control mx-auto my-1" id="interests" name="interests" placeholder="Interests: hobbies, sports, music, books?" rows="3" required>{% if 'interests' in user_info %}{{user_info.interests}}{% endif %}</textarea>
                                 </div>    
                                 
-                                <input type="submit" id="profileSubmit" class="btn tbbs-blue-button" style="width:100%" value="Submit">
+                                <div class="form-group col-md-12">
+                                    <input type="submit" id="profileSubmit" class="btn tbbs-blue-button" style="width:100%" value="Submit">    
+                                </div>
                             </form>
 
                         </div>

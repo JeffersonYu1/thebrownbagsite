@@ -71,7 +71,7 @@ def callback():
     try:
         # Specify the CLIENT_ID of the app that accesses the backend:
         idinfo = id_token.verify_oauth2_token(request.form.get('credential'), g_requests.Request(),
-            CLIENT_ID)
+            CLIENT_ID, clock_skew_in_seconds=5)
 
         # Or, if multiple clients access the backend server:
         # idinfo = id_token.verify_oauth2_token(token, requests.Request())
@@ -83,11 +83,11 @@ def callback():
         #     raise ValueError('Wrong hosted domain.')
 
         # 3) ID token is valid. Get the user's Google Account ID from the decoded token.
-
         session["user_id"] = idinfo.get("sub")
 
-    except ValueError:
+    except ValueError as e:
         # 3) If invalid token:
+        print(e)
         return error_page(400, 'Invalid token returned.')
         pass
 
