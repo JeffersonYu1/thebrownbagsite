@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block menu_items %}
+    <!-- there should be no case where this page is displayed
+        and the status is not active or profiling -->
+    <a class="nav-item nav-link" href="/">Home</a>
+    {% if session.status|string() == "active"|string() %}
+        <!-- edit status "active" navbar items -->
+        <a class="nav-item nav-link" href="/mybags">My Bags</a>
+        <a class="nav-item nav-link" href="/myorgs">My Orgs</a>
+    {% endif %}
+    <a class="nav-item nav-link active" href="/profile"><span class="sr-only">Profile</span></a>
+    <a class="nav-item nav-link" href="/about">About</a>
+    <a class="nav-item nav-link g_id_signout" href="/logout">Logout</a>
+{% endblock %}
+
+{% block main %}
+    <h1>{% if session.status|string() == "active"|string() %}My{% else %}Create{% endif %} Profile</h1>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="card text-center mx-auto my-2 shadow-sm" style="width:100%">
+                        <div class="card-header">
+                            <p class="mb-0">
+                                {% if session.status|string() == "active"|string() %}Edit{% else %}New{% endif %} Profile
+                            </p>
+                        </div>
+
+                        <div class="card-body">
+                            
+                            <form class="row g-3" id="profileForm" action="/profile" method="post">
+                                <div class="form-group col-md-6">
+                                    <label class="tbbs-form-left" for="fname">First Name<span style="color:red">*</span></label>
+                                    <input type="text" style="width:100%" class="form-control mx-auto my-1" id="fname" name="fname" placeholder="First name" {% if 'fname' in user_info %}value='{{user_info.fname}}'{% endif %} required>
+                                </div>       
+
+                                <div class="form-group col-md-6">
+                                    <label class="tbbs-form-left" for="lname">Last Name<span style="color:red">*</span></label>
+                                    <input type="text" style="width:100%" class="form-control mx-auto my-1" id="lname" name="lname" placeholder="Last name" {% if 'lname' in user_info %}value='{{user_info.lname}}'{% endif %} required>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label class="tbbs-form-left" for="pref_f_name">Preferred Name</label>
+                                    <input type="text" style="width:100%" class="form-control mx-auto my-1" id="pref_f_name" name="pref_f_name" placeholder="Preferred first name" {% if 'pref_f_name' in user_info %}value='{{user_info.pref_f_name}}'{% endif %}>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label class="tbbs-form-left" for="pronouns">Pronouns</label>
+                                    <input type="text" style="width:100%" class="form-control mx-auto my-1" id="pronouns" name="pronouns" placeholder="Pronouns" {% if 'pronouns' in user_info %}value='{{user_info.pronouns}}'{% endif %}>
+                                </div>
+
+                                <div class="form-group col-md-8">
+                                    <label class="tbbs-form-left" for="major">Major(s)</label>
+                                    <input type="text" style="width:100%" class="form-control mx-auto my-1" id="major" name="major" placeholder="Major(s)" {% if 'major' in user_info %}value='{{user_info.major}}'{% endif %}>
+                                </div>
+
+                                <div class="form-group col-md-4 mb-5">
+                                    <label class="tbbs-form-left" for="year">Year</label>
+                                    <select style="width:100%" class="form-select mx-auto my-1" id="year" name="year">
+                                        {% if 'year' not in user_info or user_info.year|string() == "None" %}
+                                            <option value="None" disabled selected>Choose...</option>
+                                            {% for option in ["First-Year", "Sophomore", "Junior", "Senior+", "n/a"] %}
+                                                <option value="{{option}}">{{option}}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option value="None" disabled>Choose...</option>
+                                            {% for option in ["First-Year", "Sophomore", "Junior", "Senior+", "n/a"] %}
+                                                <option value="{{option}}" {% if user_info.year|string() == option|string() %}selected{% endif %}>{{option}}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>       
+                                </div>          
+
+                                <div class="form-group col-md-7">
+                                    <label class="tbbs-form-left" for="email">Email<span style="color:red">*</span></label>
+                                    <input type="text" style="width:100%" class="form-control mx-auto my-1" id="email" name="email" placeholder="Email" {% if 'email' in user_info %}value='{{user_info.email}}'{% endif %} required>
+                                </div>
+
+                                <div class="form-group col-md-5">
+                                    <label class="tbbs-form-left" for="phone">Phone Number<span style="color:red">*</span></label>
+                                    <input type="number" style="width:100%" class="form-control mx-auto my-1" id="phone" name="phone" placeholder="xxxxxxxxxx" {% if 'phone' in user_info %}value='{{user_info.phone}}'{% endif %} required>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="tbbs-form-left" for="instagram">Instagram</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend my-1">
+                                            <span class="input-group-text" id="addon-instagram-at">@</span>
+                                        </div>
+                                        <input type="text" class="form-control my-1" placeholder="Instagram User" id="instagram" name="instagram" {% if 'instagram' in user_info %}value='{{user_info.instagram}}'{% endif %}>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="tbbs-form-left" for="twitter">Twitter</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend my-1">
+                                            <span class="input-group-text" id="addon-twitter-at">@</span>
+                                        </div>
+                                        <input type="text" class="form-control my-1" placeholder="Twitter Handle" id="twitter" name="twitter" {% if 'twitter' in user_info %}value='{{user_info.twitter}}'{% endif %}>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="tbbs-form-left" for="snapchat">Snapchat</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend my-1">
+                                            <span class="input-group-text" id="addon-snapchat-at">@</span>
+                                        </div>
+                                        <input type="text" class="form-control my-1" placeholder="Snap @" id="snapchat" name="snapchat" {% if 'snapchat' in user_info %}value='{{user_info.snapchat}}'{% endif %}>
+                                    </div>
+                                </div>       
+                                
+                                <div class="form-group col-md-12 mb-5" id="preferred_contact" style="text-align: left">
+                                    <label class="tbbs-form-left mb-1" for="preferred_contact">Preferred Contact(s)</label>
+                                    {% for item in ["SMS", "iMessage", "Email", "GroupMe", "Messenger", "Instagram", "Snapchat", "Twitter"] %}
+                                        {% set check_name = item + '_check' %}
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="{{check_name}}" name="{{check_name}}" {% if check_name in user_info and user_info[check_name] %}checked{% endif %}>
+                                            <label class="form-check-label" for="{{check_name}}">{{item}}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label class="tbbs-form-left" for="interests">Interests<span style="color:red">*</span></label>
+                                    <textarea style="width:100%" class="form-control mx-auto my-1" id="interests" name="interests" placeholder="Interests: hobbies, sports, music, books?" rows="3" required>{% if 'interests' in user_info %}{{user_info.interests}}{% endif %}</textarea>
+                                </div>    
+                                
+                                <input type="submit" id="profileSubmit" class="btn tbbs-blue-button" style="width:100%" value="Submit">
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    
+    {% if session.status|string() == "active"|string() %}
+        <p>This is shown when status is active.</p>
+        <p>Welcome {{ session.user_lname }}, {{ session.user_fname }}</p>
+        <p>You are user {{ session.user_id }}.</p>
+        
+    {% else %}
+        <br>
+        <p>This is shown when status is profiling.</p>
+
+        <br>
+    {% endif %}
+    
+{% endblock %}

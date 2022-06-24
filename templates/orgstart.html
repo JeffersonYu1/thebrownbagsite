@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Create Org
+{% endblock %}
+
+{% block menu_items %}
+    <a class="nav-item nav-link" href="/">Home</a>
+    {% if session.status|string() == "active"|string() %}
+        <!-- TODO -->
+        <a class="nav-item nav-link" href="/mybags">My Bags</a>
+        <a class="nav-item nav-link" href="/myorgs">My Orgs</a>
+        <a class="nav-item nav-link" href="/profile">Profile</a>
+        <a class="nav-item nav-link" href="/about">About</a>
+        <a class="nav-item nav-link g_id_signout" href="/logout">Logout</a>
+    {% elif session.status|string() == "profiling"|string() %}
+        <a class="nav-item nav-link" href="/profile">Profile</a>
+        <a class="nav-item nav-link" href="/about">About</a>
+        <a class="nav-item nav-link g_id_signout" href="/logout">Logout</a>
+    {% else %} 
+        <a class="nav-item nav-link" href="/about">About</a>
+        <a class="nav-item nav-link" href="/login">Log In</a>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <h1>Create Org</h1>
+    
+{% endblock %}

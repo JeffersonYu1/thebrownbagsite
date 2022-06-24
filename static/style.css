@@ -35,15 +35,15 @@ nav.navbar
 }
 
 .tbbs-blue-button {
-    background-color: #0974b7 !important;
-    border-color: #0974b7;
+    background-color: #2292d8 !important;
+    border-color: #2292d8;
     color: #fff;
 }
 
 .tbbs-blue-button:hover
 {
-    background-color: #08639b !important;
-    border-color: #08639b;
+    background-color: #0974b7 !important;
+    border-color: #0974b7;
     color: #fff;
 }
 
@@ -63,4 +63,21 @@ a.nav-item:hover
     display: flex; /* or grid */
     justify-content: center;
     align-items: center;
+}
+
+.tbbs-form-left {
+    display: flex;
+}
+
+/* Remove arrows from number input */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

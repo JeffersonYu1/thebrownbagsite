@@ -7,6 +7,14 @@
 {% block menu_items %}
     <a class="nav-item nav-link active" href="/"><span class="sr-only">Home</span></a>
     {% if session.status|string() == "active"|string() %}
+        <!-- TODO -->
+        <a class="nav-item nav-link" href="/mybags">My Bags</a>
+        <a class="nav-item nav-link" href="/myorgs">My Orgs</a>
+        <a class="nav-item nav-link" href="/profile">Profile</a>
+        <a class="nav-item nav-link" href="/about">About</a>
+        <a class="nav-item nav-link g_id_signout" href="/logout">Logout</a>
+    {% elif session.status|string() == "profiling"|string() %}
+        <a class="nav-item nav-link" href="/profile">Profile</a>
         <a class="nav-item nav-link" href="/about">About</a>
         <a class="nav-item nav-link g_id_signout" href="/logout">Logout</a>
     {% else %} 
@@ -19,12 +27,85 @@
     <h1>the brown bag site</h1>
     <p><em>for all your group planning needs.</em></p>
     {% if session.status|string() == "active"|string() %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card text-center mx-auto my-3 shadow-sm" style="width:100%">
+                        <div class="card-header">
+                            <p class="mb-0">
+                                Menu
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            <a href="/myorgs">My Orgs</a>
+                            <br>
+                            <a href="/orgjoin">Join an Org</a>
+                            <br>
+                            <a href="/orgstart">Create an Org</a>
+                            <br><br>
+                            <a href="/mybags">My Bags</a>
+                            <br>
+                            <a href="/bagjoin">Join a Bag</a>
+                            <br>
+                            <a href="/bagstart">Create a Bag</a>
+                        </div>
+                    </div>
+                </div>  
+
+                <div class="col-md-6">
+                    <div class="card text-center mx-auto my-3 shadow-sm" style="width:100%">
+                        <div class="card-header">
+                            <p class="mb-0">
+                                Join an Org!
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            <form class="row g-3" id="orgForm" action="/orgjoin" method="post">
+                                <div class="form-group col-lg-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend my-1">
+                                            <span class="input-group-text" id="addon-org-a">A-</span>
+                                        </div>
+                                        <input type="text" class="form-control my-1" placeholder="Enter org code." id="orgcode" name="orgcode">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-lg-6">
+                                    <input type="submit" id="joinOrgSubmit" class="btn tbbs-blue-button my-1" style="width:100%" value="Submit">
+                                </div>                                
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card text-center mx-auto my-2 shadow-sm" style="width:100%">
+                        <div class="card-header">
+                            <p class="mb-0">
+                                Join a Bag!
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            <form class="row g-3" id="bagForm" action="/bagjoin" method="post">
+                                <div class="form-group col-lg-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend my-1">
+                                            <span class="input-group-text" id="addon-bag-b">B-</span>
+                                        </div>
+                                        <input type="text" class="form-control my-1" placeholder="Enter bag code." id="bagcode" name="bagcode">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-lg-6">
+                                    <input type="submit" id="joinBagSubmit" class="btn tbbs-blue-button my-1" style="width:100%" value="Submit">
+                                </div>                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <p>This is shown when logged in.</p>
-        <p>Welcome {{ session.user_lname }}, {{ session.user_fname }}</p>
-        <p>You are user {{ session.user_id }}.</p>
-        <!-- <p><a href="/text">Import By Text</a></p>
-        <p><a href="/link">Import By Link</a></p>
-        <p><a href="/info">Attribution & Info</a></p> -->
+        <p>Welcome {{ session.user_info.pref_f_name }} {{ session.user_info.lname }}!</p>
+        <p>You are user {{ session.user_info.user_id }}.</p>
         
     {% else %}         
         <div id="g_id_onload"
@@ -59,6 +140,12 @@
         <br> -->
     {% endif %}
     
+    <footer class="small text-center text-muted">
+        Made by <a href="https://jeffersonyu1.github.io/" target="_blank">Fu-Yao (Jefferson) Yu</a>.
+        <br> Buy me a boba! <a href="https://www.paypal.com/donate?business=W8XQ2L48JH4PC&no_recurring=0&currency_code=USD" target="_blank">PayPal</a> | <a href="https://venmo.com/JeffersonYu1" target="_blank">Venmo</a> | <a href="https://cash.app/JeffersonYu1"
+            target="_blank">CashApp</a>
+        <br>
+        <br>
+    </footer>
     
-
 {% endblock %}

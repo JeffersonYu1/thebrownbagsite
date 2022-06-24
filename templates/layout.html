@@ -33,26 +33,26 @@
         </div>
     </nav>
 
-    <!-- {% if get_flashed_messages() %}
-    <header>
-        <div class="alert alert-primary border text-center" role="alert">
-            {{ get_flashed_messages() | join(" ") }}
-        </div>
-    </header>
-    {% endif %} -->
-
     <main class="container p-5">
+        <div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'message' %}
+                        <div class="alert alert-warning" role="alert">
+                        {% else %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                        {% endif %}
+                        {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
         {% block main %}{% endblock %}
     </main>
-
-    <footer class="small text-center text-muted">
-        Made by <a href="https://jeffersonyu1.github.io/" target="_blank">Fu-Yao (Jefferson) Yu</a>.
-        <br> Buy me a boba! <a href="https://www.paypal.com/donate?business=W8XQ2L48JH4PC&no_recurring=0&currency_code=USD" target="_blank">PayPal</a> | <a href="https://venmo.com/JeffersonYu1" target="_blank">Venmo</a> | <a href="https://cash.app/JeffersonYu1"
-            target="_blank">CashApp</a>
-        <br>
-        <br>
-    </footer>
-
+    
 </body>
 
 </html>
