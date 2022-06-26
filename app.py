@@ -38,7 +38,18 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         status = session.get("status")
         if (status is None) or (not status == "active"):
-            flash("Please log in to continue.", "warning")
+            flash("Please log in to continue.", "danger")
+            return redirect("/")
+        return f(*args, **kwargs)
+    return decorated_function
+
+# Require login or profiling on profile page
+def login_required_profile(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        status = session.get("status")
+        if (not status == "active") and (not status == "profiling"):
+            flash("Please log in to continue.", "danger")
             return redirect("/")
         return f(*args, **kwargs)
     return decorated_function
@@ -113,11 +124,12 @@ def logout():
     return redirect("/")
 
 @app.route("/profile", methods = ["GET", "POST"])
+@login_required_profile
 def profile():
     # GET
     if request.method == "GET":
         if session.get("status") != "profiling" and session.get("status") != "active":
-            flash("Please log in to continue.", "warning")
+            flash("Please log in to continue.", "danger")
             return redirect("/")
 
         if session.get("status") == "profiling":
@@ -148,24 +160,30 @@ def profile():
 
         print(form_response)
 
-        fname = form_response.get("fname")
-        lname = form_response.get("lname")
-        pref_f_name = form_response.get("pref_f_name")
-        pronouns = form_response.get("pronouns")
-        major = form_response.get("major")
+        fname = form_response.get("fname").strip()
+        lname = form_response.get("lname").strip()
+        pref_f_name = form_response.get("pref_f_name").strip()
+        pronouns = form_response.get("pronouns").strip()
+        major = form_response.get("major").strip()
         year = form_response.get("year")
-        email = form_response.get("email")
-        phone = form_response.get("phone")
-        instagram = form_response.get("instagram")
-        twitter = form_response.get("twitter")
-        snapchat = form_response.get("snapchat")
+
+        bad_year = False
+        if year not in ["First-Year", "Sophomore", "Junior", "Senior+", "n/a", None]:
+            year = None
+            bad_year = True
+
+        email = form_response.get("email").strip()
+        phone = form_response.get("phone").strip()
+        instagram = form_response.get("instagram").strip()
+        twitter = form_response.get("twitter").strip()
+        snapchat = form_response.get("snapchat").strip()
 
         contact_pref_names = ["SMS", "iMessage", "Email", "GroupMe", "Messenger", "Instagram", "Snapchat", "Twitter"]
         contact_pref_list = []
         for name in contact_pref_names:
             contact_pref_list.append(0 if form_response.get(name + "_check") == None else 1)
 
-        interests = form_response.get("interests")
+        interests = form_response.get("interests").strip()
         
         conn = get_db_connection()
         conn.execute("REPLACE INTO users (user_id, fname, lname, pref_f_name, pronouns, major, year, email, phone, instagram, twitter, snapchat, SMS_check, iMessage_check, Email_check, GroupMe_check, Messenger_check, Instagram_check, Snapchat_check, Twitter_check, interests) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -177,8 +195,10 @@ def profile():
             (session.get("user_id"),)).fetchone()
         conn.close()
 
-        flash("Profile saved.", "info")
-        session["status"] = "active"
+        flash("Profile saved.", "success") if not bad_year else flash("Invalid 'year' option.", "danger")
+        if not bad_year:
+            session["status"] = "active"
+        
         print(user_info)
         session["user_info"] = user_info
         return render_template("profile.html", user_info = user_info)

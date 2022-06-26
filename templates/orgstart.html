@@ -4,6 +4,10 @@
     Create Org
 {% endblock %}
 
+{% block customScripts %}
+    <script src="/static/orgstart.js"></script>
+{% endblock %}
+
 {% block menu_items %}
     <a class="nav-item nav-link" href="/">Home</a>
     {% if session.status|string() == "active"|string() %}
@@ -40,30 +44,94 @@
                         <form class="row g-3" id="orgStartForm" action="/orgstart" method="post">
                             <div class="form-group col-md-12">
                                 <label class="tbbs-form-left" for="orgnme">Organization Name<span style="color:red">*</span></label>
-                                <input type="text" style="width:100%" class="form-control mx-auto my-1" id="orgname" name="orgname" placeholder="First name" {% if org_info and 'orgname' in org_info %}value='{{org_info.orgname}}'{% endif %} required>
+                                <input type="text" style="width:100%" class="form-control mx-auto my-1" id="orgname" name="orgname" placeholder="Org name" {% if org_info and 'orgname' in org_info %}value='{{org_info.orgname}}'{% endif %} required>
                             </div>       
 
                             <div class="form-group col-md-6">
                                 <label class="tbbs-form-left" for="org-join-code">Org Join Code<span style="color:red">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend my-1">
-                                        <span class="input-group-text" id="addon-org-a">A-</span>
+                                        <span class="input-group-text" id="addon-org-at">@</span>
                                     </div>
-                                    <input type="text" class="form-control my-1" placeholder="Enter desired code." id="org-join-code" name="org-join-code" {% if org_info and 'org-join-code' in org_info %}value='{{org_info.org-join-code}}'{% endif %}>
+                                    <input type="text" class="form-control my-1" placeholder="Enter desired code." id="org-join-code" name="org-join-code" {% if org_info and 'org-join-code' in org_info %}value='{{org_info.org-join-code}}'{% endif %} onchange="document.getElementById('org-join-code-copy').value = '@' + this.value.trim();">
                                 </div>    
                             </div>
 
                             <div class="form-group col-md-6">
+                                <label class="tbbs-form-left" for="org-join-code-copy">Your Org Join Code will be:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control my-1" placeholder="" id="org-join-code-copy" name="org-join-code-copy" value="A-" disabled>
+                                    <input type="text" class="form-control my-1" placeholder="" id="org-join-code-copy" name="org-join-code-copy" value="@{% if org_info and 'org-join-code' in org_info %}{{org_info.org-join-code}}{% endif %}" disabled>
                                 </div>    
+                            </div>
+                            
+                            <!-- <div class="form-group col-md-12">
+                                <p>Type labels (eg. UT EID, New/Old Member, etc.) for up to four open-ended fields, separated by new lines. Fields are requested and required from participants.</p>
                             </div>
 
                             <div class="form-group col-md-12">
                                 <label class="tbbs-form-left" for="interests">Custom Fields<span style="color:red">*</span></label>
-                                <textarea style="width:100%" class="form-control mx-auto my-1" id="interests" name="interests" placeholder="Up to four open-ended " rows="3">{% if 'customfields' in org_info %}{{org_info.customfields}}{% endif %}</textarea>
-                            </div>    
+                                <textarea style="width:100%" class="form-control mx-auto my-1" id="interests" name="interests" placeholder="Custom fields" rows="4" required>{% if 'customfields' in org_info %}{{org_info.customfields}}{% endif %}</textarea>
+                            </div> -->
                             
+                            <div class="form-group col-md-12" id="custom-fields-checkbox" style="text-align: left">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="custom-fields-check" name="custom-fields-check" {% if 'custom-fields-check' in org_info and org_info.custom-fields-check %}checked{% endif %} onchange="">
+                                        <label class="form-check-label" for="custom-fields-check">Include custom fields? (Users will be required to fill out the fields when joining your org.)</label>
+                                    </div>
+                            </div>
+
+                            <div id="custom-fields-inputs" class="col-md-12">
+                                {% for fieldNum in ["1", "2", "3", "4"] %}
+                                    <div class="row mb-4">
+                                        <div class="form-group col-md-4">
+                                            <label class="tbbs-form-left" for="field{{ fieldNum }}-select">Custom Field {{ fieldNum }} Type</label>
+                                            <select style="width:100%" class="form-select mx-auto my-2" id="field{{ fieldNum }}-select" name="field{{ fieldNum }}-select">
+                                                {% if ('field' + fieldNum + '-select') not in org_info %}
+                                                    <option value="None" selected>None</option>
+                                                    {% for option in ["Open-Ended", "Dropdown"] %}
+                                                        <option value="{{option}}">{{option}}</option>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    {% for option in ["None", "Open-Ended", "Dropdown"] %}
+                                                        <!-- TODO: Need TO FIGURE THIS OUT -->
+                                                        <option value="{{option}}" {% if org_info.field1|string() == option|string() %}selected{% endif %}>{{option}}</option>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </select>
+                                        </div> 
+                                        
+                                        <div class="form-group col-md-4 my-1" id="field{{ fieldNum }}-input-super-div">
+                                                <div class="col-md-12" id="field{{ fieldNum }}-input-div">
+                                                    <label class="tbbs-form-left" for="field1-input">Field {{ fieldNum }} Title</label>
+                                                    <input type="text" style="width:100%" class="form-control mx-auto my-1" id="field{{ fieldNum }}-input" name="field{{ fieldNum }}-select" placeholder="Field {{ fieldNum }} Title" {% if 'field1-input' in org_info %}value='{{org_info.field1-input}}'{% endif %} onchange="let res = this.value.trim(); if (!res) res = 'Field {{ fieldNum }} Title'; else res += ' (preview)'; document.getElementById('field{{ fieldNum }}-preview-label').innerHTML = res; document.getElementById('field{{ fieldNum }}-dropdown-preview-label').innerHTML = res;">    
+                                                </div>
+                                                
+                                                    <div class="col-md-12" id="field{{ fieldNum }}-input-dropdown-div">
+                                                        <label class="tbbs-form-left" for="field{{ fieldNum }}-input-dropdown"></label>
+                                                        <input type="text" style="width:100%" class="form-control mx-auto my-1" id="field{{ fieldNum }}-input-dropdown" name="field{{ fieldNum }}-input-dropdown" placeholder="Field {{ fieldNum }} Options (Comma-Separated)" {% if 'field1-input-dropdown' in org_info %}value='{{org_info.field1-input-dropdown}}'{% endif %} onchange="dropdownPreview(this, 'field{{ fieldNum }}-dropdown-preview', 'Field {{ fieldNum }} Preview');">
+                                                    </div>
+                                                
+                                        </div>
+
+                                        <div class="form-group col-md-4" id="field{{ fieldNum }}-preview-div">
+                                            <div class="col-md-12">
+                                                <label class="tbbs-form-left" for="field{{ fieldNum }}-preview" id="field{{ fieldNum }}-preview-label">Field {{ fieldNum }} Preview</label>
+                                                <input type="text" style="width:100%" class="form-control mx-auto my-2" id="field{{ fieldNum }}-preview" name="field{{ fieldNum }}-preview" placeholder="Field {{ fieldNum }} Preview" disabled>    
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4" id="field{{ fieldNum }}-dropdown-preview-div">
+                                            <div class="col-md-12">
+                                                <label class="tbbs-form-left" for="field{{ fieldNum }}-dropdown-preview" id="field{{ fieldNum }}-dropdown-preview-label">Field {{ fieldNum }} Preview</label>
+                                                <select style="width:100%" class="form-select mx-auto my-2" id="field{{ fieldNum }}-dropdown-preview" name="field{{ fieldNum }}-dropdown-preview">
+                                                    <option>Field {{ fieldNum }} Preview</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
                             <div class="form-group col-md-12">
                                 <input type="submit" id="profileSubmit" class="btn tbbs-blue-button" style="width:100%" value="Submit">    
                             </div>
